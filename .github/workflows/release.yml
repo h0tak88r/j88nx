@@ -26,6 +26,7 @@ jobs:
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             j88nx-linux-amd64
