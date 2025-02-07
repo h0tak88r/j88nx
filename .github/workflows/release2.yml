@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o j88nx-linux-amd64
+          GOOS=windows GOARCH=amd64 go build -o j88nx-windows-amd64.exe
+          GOOS=darwin GOARCH=amd64 go build -o j88nx-darwin-amd64
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            j88nx-linux-amd64
+            j88nx-windows-amd64.exe
+            j88nx-darwin-amd64
+          generate_release_notes: true
